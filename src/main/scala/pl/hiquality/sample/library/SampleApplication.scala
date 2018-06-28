@@ -5,33 +5,11 @@ import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model._
 import akka.stream.ActorMaterializer
-import io.circe.{Decoder, Encoder}
-import pl.hiquality.sample.library.Model.{Author, Book, Isbn, Title}
+import pl.hiquality.sample.library.domain.{Author, Book, Isbn, Title}
 
 import scala.collection.immutable.ListSet
 import scala.concurrent.{ExecutionContextExecutor, Future}
 import scala.io.StdIn
-
-
-object Model {
-  case class Isbn(value: String) extends AnyVal
-  case class Title(value: String) extends AnyVal
-  case class Author(value: String) extends AnyVal
-
-  case class Book(isbn: Isbn, title: Title, authors: ListSet[Author])
-
-  object Implicits {
-    import io.circe.generic.extras.semiauto._
-    implicit val isbnEncoder: Encoder[Isbn] = deriveUnwrappedEncoder
-    implicit val isbnDecoder: Decoder[Isbn] = deriveUnwrappedDecoder
-    implicit val titleEncoder: Encoder[Title] = deriveUnwrappedEncoder
-    implicit val titleDecoder: Decoder[Title] = deriveUnwrappedDecoder
-    implicit val authorEncoder: Encoder[Author] = deriveUnwrappedEncoder
-    implicit val authorDecoder: Decoder[Author] = deriveUnwrappedDecoder
-    implicit val bookEncoder: Encoder[Book] = Encoder.forProduct3("isbn", "title", "authors")(Book.unapply(_).get)
-    implicit val bookDecoder: Decoder[Book] = Decoder.forProduct3("isbn", "title", "authors")(Book.apply)
-  }
-}
 
 object SampleApplication  {
 
@@ -54,9 +32,9 @@ object SampleApplication  {
 
   def main(args: Array[String]): Unit = {
 
-    import Model.Implicits._
     import akka.http.scaladsl.server.Directives._
     import de.heikoseeberger.akkahttpcirce.FailFastCirceSupport._
+    import pl.hiquality.sample.library.mappers.Json._
 
     implicit val system: ActorSystem = ActorSystem("actor-system")
     implicit val materializer: ActorMaterializer = ActorMaterializer()
