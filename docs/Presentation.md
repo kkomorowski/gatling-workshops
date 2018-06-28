@@ -20,6 +20,23 @@ Gatling tests could be run using:
 
 ### `sbt` configuration
 
+plugins.sbt
+
+```scala
+addSbtPlugin("io.gatling" % "gatling-sbt" % "2.2.2")
+```    
+
+build.sbt
+
+```scala
+libraryDependencies ++= Seq(
+  "io.gatling.highcharts" %
+     "gatling-charts-highcharts" % "2.3.1" % "test",
+  "io.gatling"            %
+     "gatling-test-framework"    % "2.3.1" % "test"
+)
+```
+
 ---
 
 ### Maven configuration
